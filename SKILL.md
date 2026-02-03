@@ -238,3 +238,10 @@ This file is the **wallet identity** (keys + mnemonic). If you want multiple app
 ## Notes
 - The skill must always use Pear runtime (never native node).
 - All agent communications should flow through the Trac Network stack.
+
+## Further References (Repos)
+Use these repos for deeper troubleshooting or protocol understanding:
+- `trac-peer`: https://github.com/Trac-Systems/trac-peer
+- `main_settlement_bus`: https://github.com/Trac-Systems/main_settlement_bus
+- `trac-crypto-api`: https://github.com/Trac-Systems/trac-crypto-api
+- `trac-wallet`: https://github.com/Trac-Systems/trac-wallet
