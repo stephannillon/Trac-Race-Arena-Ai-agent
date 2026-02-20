@@ -1,81 +1,159 @@
-# Intercom
+# 🏎️ TNK Race Arena
 
-This repository is a reference implementation of the **Intercom** stack on Trac Network for an **internet of agents**.
+> **AI-Powered P2P Racing Game built on Intercom by Trac Systems**
+> Compete in real-time races, earn TNK token rewards, and let the AI agent optimize your strategy — all verified via Intercom sidechannels.
 
-At its core, Intercom is a **peer-to-peer (P2P) network**: peers discover each other and communicate directly (with optional relaying) over the Trac/Holepunch stack (Hyperswarm/HyperDHT + Protomux). There is no central server required for sidechannel messaging.
+[![Intercom P2P](https://img.shields.io/badge/Intercom-P2P%20Network-00ff88?style=flat-square)](https://github.com/Trac-Systems/intercom)
+[![Trac Systems](https://img.shields.io/badge/Trac-Systems-ffe600?style=flat-square)](https://github.com/Trac-Systems)
+[![TNK](https://img.shields.io/badge/Token-TNK-00cfff?style=flat-square)](#rewards)
+[![License: MIT](https://img.shields.io/badge/License-MIT-white?style=flat-square)](LICENSE)
 
-Features:
-- **Sidechannels**: fast, ephemeral P2P messaging (with optional policy: welcome, owner-only write, invites, PoW, relaying).
-- **SC-Bridge**: authenticated local WebSocket control surface for agents/tools (no TTY required).
-- **Contract + protocol**: deterministic replicated state and optional chat (subnet plane).
-- **MSB client**: optional value-settled transactions via the validator network.
+---
 
-Additional references: https://www.moltbook.com/post/9ddd5a47-4e8d-4f01-9908-774669a11c21 and moltbook m/intercom
+<img width="1270" height="832" alt="image" src="https://github.com/user-attachments/assets/698688a6-fe3c-4379-87ae-5d832c0894f7" />
 
-For full, agent‑oriented instructions and operational guidance, **start with `SKILL.md`**.  
-It includes setup steps, required runtime, first‑run decisions, and operational notes.
+<img width="1297" height="848" alt="image" src="https://github.com/user-attachments/assets/e405cf0c-50ce-45b5-8864-94d22edbeaf7" />
 
-## Awesome Intercom
+<img width="1304" height="845" alt="image" src="https://github.com/user-attachments/assets/4251130c-5176-4b80-b7db-49307ab4aa02" />
 
-For a curated list of agentic Intercom apps check out: https://github.com/Trac-Systems/awesome-intercom
 
-## What this repo is for
-- A working, pinned example to bootstrap agents and peers onto Trac Network.
-- A template that can be trimmed down for sidechannel‑only usage or extended for full contract‑based apps.
+## 🎮 What Is TNK Race Arena?
 
-## How to use
-Use the **Pear runtime only** (never native node).  
-Follow the steps in `SKILL.md` to install dependencies, run the admin peer, and join peers correctly.
+**TNK Race Arena** is a browser-based racing game where:
 
-## Architecture (ASCII map)
-Intercom is a single long-running Pear process that participates in three distinct networking "planes":
-- **Subnet plane**: deterministic state replication (Autobase/Hyperbee over Hyperswarm/Protomux).
-- **Sidechannel plane**: fast ephemeral messaging (Hyperswarm/Protomux) with optional policy gates (welcome, owner-only write, invites).
-- **MSB plane**: optional value-settled transactions (Peer -> MSB client -> validator network).
+- Players compete against **AI-controlled opponents** on a dynamic oval track
+- Race results are **broadcast and verified** over Intercom P2P sidechannels in real-time
+- Winners earn **TNK token rewards** recorded on the Trac Network replicated-state layer
+- An **onboard AI Race Agent** analyzes your performance, predicts lap times, and scouts opponents via Intercom peer data
 
-```text
-                          Pear runtime (mandatory)
-                pear run . --peer-store-name <peer> --msb-store-name <msb>
-                                        |
-                                        v
-  +-------------------------------------------------------------------------+
-  |                            Intercom peer process                         |
-  |                                                                         |
-  |  Local state:                                                          |
-  |  - stores/<peer-store-name>/...   (peer identity, subnet state, etc)    |
-  |  - stores/<msb-store-name>/...    (MSB wallet/client state)             |
-  |                                                                         |
-  |  Networking planes:                                                     |
-  |                                                                         |
-  |  [1] Subnet plane (replication)                                         |
-  |      --subnet-channel <name>                                            |
-  |      --subnet-bootstrap <admin-writer-key-hex>  (joiners only)          |
-  |                                                                         |
-  |  [2] Sidechannel plane (ephemeral messaging)                             |
-  |      entry: 0000intercom   (name-only, open to all)                     |
-  |      extras: --sidechannels chan1,chan2                                 |
-  |      policy (per channel): welcome / owner-only write / invites         |
-  |      relay: optional peers forward plaintext payloads to others          |
-  |                                                                         |
-  |  [3] MSB plane (transactions / settlement)                               |
-  |      Peer -> MsbClient -> MSB validator network                          |
-  |                                                                         |
-  |  Agent control surface (preferred):                                     |
-  |  SC-Bridge (WebSocket, auth required)                                   |
-  |    JSON: auth, send, join, open, stats, info, ...                       |
-  +------------------------------+------------------------------+-----------+
-                                 |                              |
-                                 | SC-Bridge (ws://host:port)   | P2P (Hyperswarm)
-                                 v                              v
-                       +-----------------+            +-----------------------+
-                       | Agent / tooling |            | Other peers (P2P)     |
-                       | (no TTY needed) |<---------->| subnet + sidechannels |
-                       +-----------------+            +-----------------------+
+This is a full working application — fork of [Trac-Systems/intercom](https://github.com/Trac-Systems/intercom) — demonstrating how Intercom's sidechannel + state layer can power competitive, real-time multiplayer games with token incentives.
 
-  Optional for local testing:
-  - --dht-bootstrap "<host:port,host:port>" overrides the peer's HyperDHT bootstraps
-    (all peers that should discover each other must use the same list).
+---
+
+## 🧠 AI Agent
+
+The **TNK Race Agent** is embedded directly in the game UI and uses Intercom's P2P sidechannels to:
+
+| Capability | Description |
+|---|---|
+| **Live Telemetry** | Reads opponent position data from Intercom peers in real-time |
+| **Track Analysis** | Computes optimal braking points and speed windows per lap |
+| **Outcome Prediction** | Estimates win probability and projected lap time before the race |
+| **Result Broadcast** | Publishes race outcomes to all connected Intercom peers instantly |
+| **TNK Accounting** | Tracks cumulative TNK earnings per session |
+
+---
+
+## ⚡ How It Uses Intercom
+
+```
+Player Browser
+     │
+     ├─── Intercom Sidechannel ──▶ Peer race.arena.p2p
+     │         (real-time position sync, opponent telemetry)
+     │
+     └─── Intercom State Layer ──▶ Race result commits
+               (lap times, TNK rewards, leaderboard entries)
+```
+
+- **Sidechannels**: Used for fast, ephemeral race events (position updates, speed, lap triggers)
+- **State Layer**: Used for durable race records, leaderboard entries, and TNK reward logs
+
+---
+
+## 🏆 TNK Rewards
+
+| Finish | TNK Reward |
+|---|---|
+| 🥇 1st Place | +500 TNK |
+| 🥈 2nd Place | +300 TNK |
+| 🥉 3rd Place | +150 TNK |
+| Participation | +50 TNK |
+
+All rewards are logged to the Trac Network state layer via Intercom's replicated-state mechanism.
+
+---
+
+## 🚗 Car Roster
+
+| Car | Speed | Acceleration | Style |
+|---|---|---|---|
+| PHANTOM | 9/10 | Balanced | All-rounder |
+| BLAZE | 8/10 | High | Aggressive |
+| HYPER-X | 10/10 | Low | Top speed specialist |
+| SPECTER | 7/10 | Very High | Comeback king |
+
+---
+
+## 🛠 Installation & Running Locally
+
+```bash
+# Clone this fork
+git clone https://github.com/[YOUR_HANDLE]/tnk-race-arena.git
+cd tnk-race-arena
+
+# Install Intercom dependencies
+npm install
+
+# Run the Intercom node + game server
+npm start
+
+# Open browser
+open http://localhost:3000
+```
+
+Or simply open `index.html` directly in a browser — the game runs standalone with simulated P2P for demo purposes.
+
+---
+
+## 📁 Project Structure
+
+```
+tnk-race-arena/
+├── index.html          # Full game UI + AI Agent (single-file app)
+├── SKILL.md            # Agent skill instructions for Intercom
+├── README.md           # This file
+├── package.json        # Intercom node dependencies
+└── src/
+    ├── agent.js        # AI Race Agent logic
+    ├── intercom.js     # Intercom sidechannel integration
+    └── state.js        # TNK reward state layer
 ```
 
 ---
-If you plan to build your own app, study the existing contract/protocol and remove example logic as needed (see `SKILL.md`).
+
+## 📸 Proof It Works
+
+> The game runs fully in-browser. Open `index.html` and click **START RACE** to see:
+> - Live canvas racing with 4 cars
+> - AI Agent logging real-time analysis
+> - Speed meter and lap tracker
+> - Win modal with TNK reward display
+> - Leaderboard updated after each race
+> - Intercom peer count updating every 5 seconds
+
+**[▶ Live Demo →](https://[YOUR_HANDLE].github.io/tnk-race-arena/)**
+
+---
+
+##  Trac Address (For TNK Payout)
+
+```
+trac1dx6hmng8w6z823npume48pvj4xg3d4c4203hm8gzyuznqfe6kd7qjeh9e9
+```
+
+> This address is registered for the 500 TNK awesome-intercom fork payout.
+
+---
+
+## 🔗 Related
+
+- [Trac Systems / Intercom](https://github.com/Trac-Systems/intercom) — upstream P2P agent framework
+- [awesome-intercom](https://github.com/Trac-Systems/awesome-intercom) — curated list of Intercom forks
+- [Trac Network](https://trac.network) — the underlying protocol
+
+---
+
+## 📄 License
+
+MIT — fork freely, race hard, earn TNK.
